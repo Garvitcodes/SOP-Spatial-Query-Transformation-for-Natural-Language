@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # 🗺️ BITS Pilani Spatial AI Agent
@@ -85,16 +84,19 @@ The pipeline processes each user query through four sequential stages:
 ```
 bits-pilani-spatial-ai/
 │
-├── 📓 01_data_ingestion_and_postgis_setup.ipynb   # OSM data download & DB population
-├── 📓 02_baseline_model_exploration.ipynb          # Early prompt experiments
-├── 📓 03_sql_evaluation_framework.ipynb            # AST + F1 evaluation suite
-├── 📓 04_offline_inference_llamacpp.ipynb          # llama.cpp offline pipeline
-├── 📓 05_main_gradio_pipeline.ipynb                # Production app + Gradio UI
+├── 📁 PPTs/                                                    # Project presentations (PPRs)
+├── 📁 Reports/                                                 # Contains midsem report, final report, and IEEE format report
 │
-├── 📄 golden_benchmark_dataset.pdf                 # 50-query hand-curated ground truth
+├── 📓 01_baseline_model_exploration                            # Baseline API experiments using Gemini/Groq and initial prompt design
+├── 📓 02_streamlit_interface.ipynb                             # Early Streamlit-based web UI prototype
+├── 📓 03_data_schema_extraction.ipynb                          # PostgreSQL/PostGIS setup, DB configuration, and OSM data ingestion
+├── 📓 04_tester_for_sqlcoder.ipynb                             # SQLGlot AST structural checks and F1 semantic evaluation framework
+├── 📓 05_Fully_offline_chatbot_using_llama.cpp.ipynb           # Terminal-based offline chat loop using quantized GGUF models
+├── 📓 Final_Prototype.ipynb                                    # Final Gradio Web UI combining full Hinglish intent translation & SQL execution
 │
-└── 📁 archive/
-    └── streamlit_ui/                               # Alternative Streamlit UI explorations
+├── 📄 Manually created Dataset for Sqlcoder Testing....pdf     # Hand-curated golden benchmark dataset for testing queries
+├── 📄 README.md                                                # Project documentation
+└── 🎥 Video demo.mp4                                           # Video demonstration of the final working prototype
 ```
 
 ---
@@ -139,7 +141,7 @@ sudo -u postgres psql -d pilani_db -c "CREATE EXTENSION postgis;"
 
 ### 4. Ingest OSM Data
 
-Open and run **`01_data_ingestion_and_postgis_setup.ipynb`** to download the BITS Pilani campus boundary from OpenStreetMap and populate the `pilani_db` database with nodes, ways, and spatial geometries.
+Open and run **`03_data_schema_extraction.ipynb`** to download the BITS Pilani campus boundary from OpenStreetMap and populate the `pilani_db` database with nodes, ways, and spatial geometries.
 
 ### 5. Download Model Weights
 
@@ -154,20 +156,20 @@ Place downloaded `.gguf` files in a `/models` directory at the project root.
 
 ### 6. Launch the Application
 
-Open and run **`05_main_gradio_pipeline.ipynb`**. The Gradio interface will be available at `http://localhost:7860`.
+Open and run **`Final_Prototype.ipynb`**. The Gradio interface will be available at `http://localhost:7860`.
 
 ---
 
 ## 📊 Evaluation
 
-The project includes a rigorous two-pronged evaluation framework in **`03_sql_evaluation_framework.ipynb`**:
+The project includes a rigorous two-pronged evaluation framework in **`04_tester_for_sqlcoder.ipynb`**:
 
 | Method | Tool | What it Checks |
 |---|---|---|
 | **Structural (AST)** | SQLGlot | Query structure, clause correctness, operator validity |
 | **Semantic (F1)** | Custom scorer | Result-set overlap against golden benchmark answers |
 
-The golden benchmark (`golden_benchmark_dataset.pdf`) is a manually curated set of **50 diverse queries** covering amenities, study spaces, landmarks, food, and recreational spots across campus.
+The golden benchmark (`Manually created Dataset for Sqlcoder Testing....pdf`) is a manually curated set of **50 diverse queries** covering amenities, study spaces, landmarks, food, and recreational spots across campus.
 
 ---
 
@@ -181,6 +183,12 @@ Running 8B-parameter models quantized to 4-bit precision enables inference on co
 
 **Why a denormalized schema?**
 OSM data is ingested into a single flat table with wide columns for all common tags. This trades storage efficiency for query simplicity, letting SQLCoder generate clean, readable SQL without complex joins.
+
+---
+
+## 🎬 Demo
+
+A full walkthrough of the working prototype is available in **`Video demo.mp4`** included in the repository.
 
 ---
 
